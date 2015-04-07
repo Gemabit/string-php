@@ -48,17 +48,19 @@ class String
     
     /**
      * Converts all alphabetic characters to uppercase
-     * @return object
+     * @param  boolean $onlyFirstChar If true, onlye the first character is changed to uppercase
+     * @return String
      */
-    public function toUpper()
+    public function toUpper($onlyFirstChar = false)
     {
-        $this->value = strtoupper($this->value);
+        $this->value = $onlyFirstChar ? ucfirst($this->value) : strtoupper($this->value);
         return $this;
     }
 
     /**
      * Converts all alphabetic characters to lowercase
-     * @return object
+     * @param  boolean $onlyFirstChar If true, onlye the first character is changed to lowercase
+     * @return String
      */
     public function toLower($onlyFirstChar = false)
     {
