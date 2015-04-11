@@ -1,2 +1,4 @@
 vendor/*
-tests/index.php
+/.idea/*
+/composer.phar
+/bin/*
