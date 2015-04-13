@@ -1,12 +1,22 @@
 <?php
 
+namespace Gemabit\String\Tests;
+
 use Gemabit\String\String;
 
 /**
  * @covers String
  */
-class StringTest extends PHPUnit_Framework_TestCase
+class StringTest extends StringBaseTestCase
 {
+    /**
+     * @expectedException \Gemabit\String\Exception\InvalidArgumentException
+     * @expectedExceptionMessage Passed value must be a string.
+     */
+    public function testInvalidConstruction()
+    {
+        new String(['INVALID']);
+    }
 
     public function testMagicToString()
     {

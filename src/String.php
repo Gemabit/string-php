@@ -2,28 +2,31 @@
 
 namespace Gemabit\String;
 
+use Gemabit\String\Exception\InvalidArgumentException;
+
+/**
+ * Class String
+ */
 class String
 {
-    protected $value = '';
-    
+    /**
+     * @var string
+     */
+    protected $value;
+
     /**
      * Class constructor
      * @param string $str
      */
     public function __construct($str = '')
     {
+        if (is_array($str) || is_object($str)) {
+            throw new InvalidArgumentException('Passed value must be a string.');
+        }
+
         $this->value = $str;
     }
 
-    /**
-     * Magic function
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->value;
-    }
-    
     /**
      * Appends a new string to the old one
      * @param string    $str
@@ -34,7 +37,7 @@ class String
         $this->value .= $str;
         return $this;
     }
-    
+
     /**
      * Prepends a new string to the old one
      * @param string    $str
@@ -45,10 +48,10 @@ class String
         $this->value = $str . $this->value;
         return $this;
     }
-    
+
     /**
      * Converts all alphabetic characters to uppercase
-     * @param  boolean $onlyFirstChar If true, onlye the first character is changed to uppercase
+     * @param  boolean $onlyFirstChar If true, only the first character is changed to uppercase
      * @return String
      */
     public function toUpper($onlyFirstChar = false)
@@ -59,7 +62,7 @@ class String
 
     /**
      * Converts all alphabetic characters to lowercase
-     * @param  boolean $onlyFirstChar If true, onlye the first character is changed to lowercase
+     * @param  boolean $onlyFirstChar If true, only the first character is changed to lowercase
      * @return String
      */
     public function toLower($onlyFirstChar = false)
@@ -67,7 +70,7 @@ class String
         $this->value = $onlyFirstChar ? lcfirst($this->value) : strtolower($this->value);
         return $this;
     }
-    
+
     /**
      * Uppercase the first character of the string
      * @param boolean   $capitalizeAllWords Uppercase the first character of each word in a string if it's true
@@ -78,7 +81,7 @@ class String
         $this->value = $capitalizeAllWords ? ucwords($this->value) : ucfirst($this->value);
         return $this;
     }
-    
+
     /**
      * Formats the string to camelCase
      * @return object
@@ -87,7 +90,7 @@ class String
     {
         return $this->toCapital(true)->remove(' ')->toLower(true);
     }
-    
+
     /**
      * Checks if it starts with the $needle
      * @param string    $needle
@@ -97,7 +100,7 @@ class String
     {
         return !strncmp($this->value, $needle, strlen($needle));
     }
-    
+
     /**
      * Checks if it ends with the $needle
      * @param string    $needle
@@ -110,7 +113,7 @@ class String
         
         return (substr($this->value, -strlen($needle)) === $needle);
     }
-    
+
     /**
      * Checks if it contains the $needle
      * @param string    $needle
@@ -120,7 +123,7 @@ class String
     {
         return strpos($this->value, $needle) !== false;
     }
-    
+
     /**
      * Returns the first n chars of the string
      * @param integer   $n
@@ -128,7 +131,7 @@ class String
      */
     public function firstChar($n = 1)
     {
-        return substr($str, $n);
+        return substr($this->value, $n);
     }
 
     /**
@@ -138,7 +141,7 @@ class String
      */
     public function lastChar($n = 1)
     {
-        return substr($str, -$n);
+        return substr($this->value, -$n);
     }
 
     /**
@@ -150,7 +153,7 @@ class String
     {
         return explode($delimiter, $this->value);
     }
-    
+
     /**
      * Returns the length of the string
      * @return integer
@@ -159,7 +162,7 @@ class String
     {
         return strlen($this->value);
     }
-    
+
     /**
      * Calculates the string strength between 0 and 6, it may be used on password validations
      * @return integer
@@ -178,7 +181,7 @@ class String
 
         return $strength;
     }
-    
+
     /**
      * Returns an array with all the words in the string
      * @return array
@@ -187,7 +190,7 @@ class String
     {
         return explode(' ', preg_replace("/[^a-zA-Z0-9]+/", "", $this->value));
     }
-    
+
     /**
      * Returns the total amount of words in the string
      * @return integer
@@ -196,7 +199,7 @@ class String
     {
         return count($this->words());
     }
-    
+
     /**
      * Return information about words used in a string
      * @param integer $format
@@ -207,7 +210,7 @@ class String
     {
         return str_word_count($this->value, $format);
     }
-    
+
     /**
      * Return information about characters used in a string
      * @param integer $mode
@@ -218,11 +221,12 @@ class String
     {
         return count_chars($this->value, $mode);
     }
-    
+
     /**
      * Find and replace a word or a group of words
      * @param array|string $find
      * @param array|string $replace
+     * @param boolean
      * @return object
      */
     public function replace($find, $replace, $count = false)
@@ -230,7 +234,7 @@ class String
         $this->value = str_replace($find, $replace, $this->value, $count);
         return $this;
     }
-    
+
     /**
      * Removes the value, or group of values passed, from the string
      * @param string $needle
@@ -240,7 +244,7 @@ class String
     {
         return $this->replace($needle, '');
     }
-    
+
     /**
      * This can be used for templating. i.e.: sstr::init("{0} bought a {1}, some {2} and another {1}... ")->format("john", "potato", "chicken"); will return "john bought a potato, some chicken and another potato..."
      * @param args[string]
@@ -255,7 +259,7 @@ class String
         
         return $this;
     }
-    
+
     /**
      * Validates if the string is an email
      * @return boolean
@@ -264,7 +268,7 @@ class String
     {
         return filter_var($this->value, FILTER_VALIDATE_EMAIL);
     }
-    
+
     /**
      * Validates if the string is an url
      * @return boolean
@@ -273,7 +277,7 @@ class String
     {
         return filter_var($this->value, FILTER_VALIDATE_EMAIL);
     }
-        
+
     /**
      * Validates if the string is an IP
      * @return boolean
@@ -282,7 +286,7 @@ class String
     {
         return filter_var($this->value, FILTER_VALIDATE_IP);
     }
-    
+
     /**
      * Checks if the string is empty
      * @return boolean
@@ -291,7 +295,7 @@ class String
     {
         return empty($this->value);
     }
-    
+
     /**
      * Checks if all of the characters in the provided string, creates whitespace.
      * @return boolean
@@ -303,13 +307,13 @@ class String
 
     /**
      * Checks if the string is a valid Date
-     * @param boolean
+     * @return boolean
      */
     public function isDate()
     {
         return !!strtotime($this->value);
     }
-    
+
     /**
      * Checks if all of the characters in the provided string, are alphabetic.
      * @return boolean
@@ -327,7 +331,7 @@ class String
     {
         return ctype_alnum($this->value);
     }
-    
+
     /**
      * Checks for numeric character(s)
      * @return boolean
@@ -336,7 +340,7 @@ class String
     {
         return ctype_digit($this->value);
     }
-    
+
     /**
      * Checks if all of the characters in the provided string, are lowercase letters.
      * @return boolean
@@ -354,7 +358,7 @@ class String
     {
         return ctype_upper($this->value);
     }
-    
+
     /**
      * Checks if all of the characters in the provided string, are printable. i.e.: The string 'abcd\n\r\t' does not consist of all printable characters.
      * @return boolean
@@ -363,7 +367,7 @@ class String
     {
         return ctype_print($this->value);
     }
-    
+
     /**
      * Checks if all of the characters in the provided string, are punctuation character.
      * @return boolean
@@ -372,7 +376,7 @@ class String
     {
         return ctype_punct($this->value);
     }
-    
+
     /**
      * Checks if all of the characters in the provided string, are hexadecimal 'digits'.
      * @return boolean
@@ -381,7 +385,7 @@ class String
     {
         return ctype_xdigit($this->value);
     }
-    
+
     /**
      * Checks of the value in the provided string is Integer
      * @return boolean
@@ -390,7 +394,7 @@ class String
     {
         return is_int($this->value);
     }
-    
+
     /**
      * Checks of the value in the provided string is Float
      * @return boolean
@@ -399,7 +403,7 @@ class String
     {
         return is_float($this->value);
     }
-    
+
     /**
      * Checks of the value in the provided string is Double
      * @return boolean
@@ -408,7 +412,7 @@ class String
     {
         return $this->isNumeric() && !$this->contains('.');
     }
-    
+
     /**
      * Returns the value as a timestamp
      * @return integer|boolean Returns false if the string isn't a valid date expression
@@ -417,7 +421,7 @@ class String
     {
         return strtotime($this->value);
     }
-    
+
     /**
      * Returns the string as a formated date string(if its a valid date expression)
      * @param string $format Date format that you want to retrieve
@@ -430,16 +434,7 @@ class String
         
         return date($format, $timestamp);
     }
-    
-    /**
-     * Returns the value as a string
-     * @return string
-     */
-    public function toString()
-    {
-        return $this->value;
-    }
-    
+
     /**
      * Returns the value as a integer
      * @return integer
@@ -448,7 +443,7 @@ class String
     {
         return intval($this->value);
     }
-    
+
     /**
      * Returns the value as a float
      * @return integer
@@ -457,7 +452,7 @@ class String
     {
         return floatval($this->value);
     }
-    
+
     /**
      * Returns the value as a double
      * @return double
@@ -466,7 +461,7 @@ class String
     {
         return doubleval($this->value);
     }
-    
+
     /**
      * Returns the value as a boolean
      * @return string
@@ -490,7 +485,7 @@ class String
         
         return false;
     }
-    
+
     /**
      * Returns the md5 of the value
      * @param boolean $rawOutput If the optional raw_output is set to TRUE, then the md5 digest is instead returned in raw binary format with a length of 16.
@@ -500,7 +495,7 @@ class String
     {
         return md5($this->value, $rawOutput);
     }
-        
+
     /**
      * Returns the sha1 of the value
      * @param boolean $rawOutput If the optional raw_output is set to TRUE, then the sha1 digest is instead returned in raw binary format with a length of 20, otherwise the returned value is a 40-character hexadecimal number.
@@ -510,18 +505,18 @@ class String
     {
         return sha1($this->value, $rawOutput);
     }
-    
+
     /**
      * Generate a hash value
      * @param string $hashAlgorithm Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..)
-     * @param boolean $rawOutput When set to TRUE, outputs raw binary data. FALSE outputs lowercase hexits.
+     * @param boolean $rawOutput When set to TRUE, outputs raw binary data. FALSE outputs lowercase exits.
      * @return string
      */
     public function toHash($hashAlgorithm, $rawOutput = false)
     {
         return hash($hashAlgorithm, $this->value, $rawOutput);
     }
-    
+
     /**
      * Strip whitespace (or other characters) from the beginning and end of a string
      * @param string $charList Default characters to strip
@@ -532,7 +527,7 @@ class String
         $this->value = trim($this->value, $charList);
         return $this;
     }
-    
+
     /**
      * Strip whitespace (or other characters) from the beginning of a string
      * @param string $charList Default characters to strip
@@ -543,18 +538,18 @@ class String
         $this->value = ltrim($this->value, $charList);
         return $this;
     }
-    
+
     /**
      * Strip whitespace (or other characters) from the end of a string
      * @param string $charList Default characters to strip
      * @return object
      */
-    public function trimRigth($charList = " \t\n\r\0\x0B")
+    public function trimRight($charList = " \t\n\r\0\x0B")
     {
         $this->value = rtrim($this->value, $charList);
         return $this;
     }
-    
+
     /**
      * Convert all applicable characters to HTML entities
      * @return object
@@ -564,7 +559,7 @@ class String
         $this->value = htmlentities($this->value);
         return $this;
     }
-    
+
     /**
      * Convert all HTML entities to their applicable characters
      * @return object
@@ -574,7 +569,7 @@ class String
         $this->value = html_entity_decode($this->value);
         return $this;
     }
-        
+
     /**
      * Convert special characters to HTML entities
      * @return object
@@ -584,7 +579,7 @@ class String
         $this->value = htmlspecialchars($this->value);
         return $this;
     }
-    
+
     /**
      * Convert special HTML entities back to characters
      * @return object
@@ -609,13 +604,31 @@ class String
      * Decodes URL-encoded string
      * @return object
      */
-    public function urlDencode()
+    public function urlDecode()
     {
         $this->value = urldecode($this->value);
         return $this;
     }
-    
-    
+
+    /**
+     * Returns the value as a string
+     *
+     * @return string
+     */
+    public function toString()
+    {
+        return $this->value;
+    }
+
+    /**
+     * Magic function
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toString();
+    }
 }
 
 function String($str)
