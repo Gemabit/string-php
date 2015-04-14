@@ -5,7 +5,7 @@ namespace Gemabit\String\Tests;
 use Gemabit\String\String;
 
 /**
- * @covers String
+ * @covers Gemabit\String\String
  */
 class StringTest extends StringBaseTestCase
 {
