@@ -29,7 +29,7 @@ class String
 
     /**
      * Appends a new string to the old one
-     * @param string    $str
+     * @param string $str
      * @return object
      */
     public function append($str)
@@ -40,7 +40,7 @@ class String
 
     /**
      * Prepends a new string to the old one
-     * @param string    $str
+     * @param string $str
      * @return object
      */
     public function prepend($str)
@@ -73,7 +73,7 @@ class String
 
     /**
      * Uppercase the first character of the string
-     * @param boolean   $capitalizeAllWords Uppercase the first character of each word in a string if it's true
+     * @param boolean $capitalizeAllWords Uppercase the first character of each word in a string if it's true
      * @return object
      */
     public function toCapital($capitalizeAllWords = false)
@@ -93,7 +93,7 @@ class String
 
     /**
      * Checks if it starts with the $needle
-     * @param string    $needle
+     * @param string $needle
      * @return boolean
      */
     public function startsWith($needle)
@@ -103,20 +103,21 @@ class String
 
     /**
      * Checks if it ends with the $needle
-     * @param string    $needle
+     * @param string $needle
      * @return boolean
      */
     public function endsWith($needle)
     {
-        if (strlen($needle) == 0)
+        if (strlen($needle) == 0) {
             return true;
+        }
         
         return (substr($this->value, -strlen($needle)) === $needle);
     }
 
     /**
      * Checks if it contains the $needle
-     * @param string    $needle
+     * @param string $needle
      * @return boolean
      */
     public function contains($needle)
@@ -126,7 +127,7 @@ class String
 
     /**
      * Returns the first n chars of the string
-     * @param integer   $n
+     * @param integer $n
      * @return boolean
      */
     public function firstChar($n = 1)
@@ -136,7 +137,7 @@ class String
 
     /**
      * Returns the last n chars of the string
-     * @param integer   $n
+     * @param integer $n
      * @return boolean
      */
     public function lastChar($n = 1)
@@ -161,25 +162,6 @@ class String
     public function length()
     {
         return strlen($this->value);
-    }
-
-    /**
-     * Calculates the string strength between 0 and 6, it may be used on password validations
-     * @return integer
-     */
-    public function strength()
-    {
-        $strength = 1;
-    
-        if ($this->length() < 1)    return 0;
-        if ($this->length() < 4)    return 1;
-        if ($this->length() >= 8)   $strength++;
-        if ($this->length() >= 10)  $strength++;
-        $strength += (int) (preg_match("/[a-z]/", $this->value) && preg_match("/[A-Z]/", $this->value));
-        $strength += preg_match("/[0-9]/", $this->value);
-        $strength += preg_match("/.[!,@,#,$,%,^,&,*,?,_,~,-,£,(,)]/", $this->value);
-
-        return $strength;
     }
 
     /**
@@ -254,8 +236,9 @@ class String
     {
         $args = func_get_args();
         
-        foreach ($args as $key => $value)
+        foreach ($args as $key => $value) {
             $this->value = str_replace(sprintf('{%d}', $key), $value, $this->value);
+        }
         
         return $this;
     }
@@ -429,8 +412,9 @@ class String
      */
     public function toDate($format = 'd/m/Y H:i:s')
     {
-        if (!$timestamp = $this->toTimestamp())
+        if (!$timestamp = $this->toTimestamp()) {
             return false;
+        }
         
         return date($format, $timestamp);
     }
@@ -480,8 +464,9 @@ class String
     {
         $tmp = $this->value;
         
-        if (settype ($tmp, $type))
+        if (settype($tmp, $type)) {
             return $tmp;
+        }
         
         return false;
     }
@@ -508,8 +493,8 @@ class String
 
     /**
      * Generate a hash value
-     * @param string $hashAlgorithm Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..)
-     * @param boolean $rawOutput When set to TRUE, outputs raw binary data. FALSE outputs lowercase exits.
+     * @param string  $hashAlgorithm Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..)
+     * @param boolean $rawOutput     When set to TRUE, outputs raw binary data. FALSE outputs lowercase exits.
      * @return string
      */
     public function toHash($hashAlgorithm, $rawOutput = false)
@@ -629,9 +614,4 @@ class String
     {
         return $this->toString();
     }
-}
-
-function String($str)
-{
-    return new String($str);
 }
