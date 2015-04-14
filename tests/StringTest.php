@@ -5,7 +5,7 @@ namespace Gemabit\String\Tests;
 use Gemabit\String\String;
 
 /**
- * @covers String
+ * @covers Gemabit\String\String
  */
 class StringTest extends StringBaseTestCase
 {
@@ -15,7 +15,7 @@ class StringTest extends StringBaseTestCase
      */
     public function testInvalidConstruction()
     {
-        new String(['INVALID']);
+        new String(array('INVALID'));
     }
 
     public function testMagicToString()
@@ -63,5 +63,4 @@ class StringTest extends StringBaseTestCase
         $str = new String("Which came first, the Chicken or the Egg?");
         $this->assertEquals("which came first, the Chicken or the Egg?", $str->toLower(true)->toString());
     }
-
 }

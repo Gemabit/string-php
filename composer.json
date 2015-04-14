@@ -25,5 +25,10 @@
         "psr-4": {
             "Gemabit\\String\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Gemabit\\String\\Tests\\": "tests/"
+        }
     }
 }
